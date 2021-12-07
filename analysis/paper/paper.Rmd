@@ -68,13 +68,23 @@ Here is a citation [@Marwick2017]
 <!-- Here's some example analysis code: -->
 
 ```{r get-data, eval = FALSE}
+library(readxl)
+
 # Note the path that we need to use to access our data files when rendering this document
-my_data <- read.csv(here::here('analysis/data/raw_data/my_csv_file.csv'))
+data <- read_excel("/Users/raelinecv/RStudio/Kolokotrones/data/41586_2010_BFnature08920_MOESM90_ESM.xls", skip = 6)
+
+head(data)
 ```
 
-```{r demo-plot, fig.cap="A plot of random numbers"}
-plot(rnorm(10))
+```{r parse-data, fig.cap="A plot of random numbers"}
+
+
+
+
 ```
+
+
+
 
 Figure \@ref(fig:demo-plot) shows how we can have a caption and cross-reference for a plot
 
