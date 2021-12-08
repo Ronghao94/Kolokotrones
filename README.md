@@ -35,7 +35,7 @@ The **analysis** directory contains:
 -   [:file\_folder: templates](/analysis/templates): Templates used to
     build this research compendium.
 
-## How to run in your browser or download and run locally
+## Installation
 
 This research compendium has been developed using the statistical
 programming language R. To work with the compendium, you will need
@@ -50,10 +50,66 @@ After unzipping:
 -   open the `.Rproj` file in RStudio
 -   run `devtools::install()` to ensure you have the packages this
     analysis depends on (also listed in the [DESCRIPTION](/DESCRIPTION)
-    file).
+    file)
 -   finally, open `analysis/paper/paper.Rmd` and knit to produce the
     `paper.docx`, or run `rmarkdown::render("analysis/paper/paper.Rmd")`
     in the R console
+
+## Usage
+
+The large sizes of orcas and elephants have the potential to
+disproportionately affect model fit. Consequently, orcas and elephants
+were excluded from the dataset used to fit the linear and quadratic
+models. We wrote a function `subset_data()` to prepare the data for
+model fitting.
+
+Load the required packages:
+
+``` r
+library(Kolokotrones)
+library(dplyr)
+#> 
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
+library(readxl)
+library(stringr)
+```
+
+Load and prepare the data:
+
+``` r
+data <- read_excel(here::here("analysis/data/41586_2010_BFnature08920_MOESM90_ESM.xls"), skip = 6)
+#> New names:
+#> * Notes -> Notes...11
+#> * Notes -> Notes...21
+names(data) <- str_replace_all(names(data), c(" " = ".", "[(]" = "", "[)]" = ""))
+```
+
+Run `subset_data()` to drop orcas and elephants from the dataset.
+
+``` r
+drop_genera <- (c("Elephantulus", "Orcinus"))
+sub_data <- subset_data(data, drop_genera)
+head(sub_data)
+#> # A tibble: 6 × 21
+#>   Order  Family  Genus  Species Genus.Species McNab.Name Mass.g BMR.W `BMR.kJ/h`
+#>   <chr>  <chr>   <chr>  <chr>   <chr>         <chr>       <dbl> <dbl>      <dbl>
+#> 1 Monot… Tachyg… Tachy… aculea… Tachyglossus… <NA>         2140 1.56        5.63
+#> 2 Monot… Tachyg… Zaglo… bartoni Zaglossus ba… <NA>        10300 6.78       24.4 
+#> 3 Monot… Ornith… Ornit… anatin… Ornithorhync… <NA>         1300 2.61        9.4 
+#> 4 Didel… Didelp… Calur… derbia… Caluromys de… <NA>          357 1.14        4.09
+#> 5 Didel… Didelp… Graci… microt… Gracilinanus… Marmosa m…     13 0.106       0.38
+#> 6 Didel… Didelp… Thyla… elegans Thylamys ele… <NA>           40 0.239       0.86
+#> # … with 12 more variables: Temperature.C <dbl>, Notes...11 <chr>,
+#> #   Reference <chr>, Food <chr>, Climate <chr>, Habitat <chr>, Substrate <chr>,
+#> #   Torpor <chr>, Islands <chr>, Mountains <chr>, Tree.Name <chr>,
+#> #   Notes...21 <chr>
+```
 
 ### Licenses
 
