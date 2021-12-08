@@ -9,6 +9,7 @@
 #' @return An object of the same type as `df`. Properties of the output:
 #'   - Retained rows appear in the same order as in the input
 #'   - Columns and data frame attributes are preserved
+#' @export
 #' @examples
 #' subset_data(data, c("Elephantulus", "Orcinus"))
 #'
