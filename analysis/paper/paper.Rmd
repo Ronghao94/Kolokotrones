@@ -84,13 +84,10 @@ head(data)
 drop_genera <- (c("Elephantulus", "Orcinus"))
 sub_data <- subset_data(data, drop_genera)
 
-# function this
+# linear regression
 lm(log10(BMR.W) ~ log10(Mass.g), sub_data)
-# function this
+# quadratic regression
 lm(log10(BMR.W) ~ (log10(Mass.g)^2) + log10(Mass.g), sub_data)
-
-# ggplot2 the figure
-
 
 ```
 
