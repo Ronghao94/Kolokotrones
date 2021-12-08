@@ -23,3 +23,10 @@ An object of the same type as \code{df}. Properties of the output:
 \description{
 \code{subset_data} drops observations according to their genera.
 }
+\examples{
+subset_data(data, c("Elephantulus", "Orcinus"))
+
+#' \dontrun{
+subset_data("a")
+}
+}

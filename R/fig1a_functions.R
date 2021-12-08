@@ -9,16 +9,14 @@
 #' @return An object of the same type as `df`. Properties of the output:
 #'   - Retained rows appear in the same order as in the input
 #'   - Columns and data frame attributes are preserved
-#' @export
-subset_data <- function(df, genera) {
-  sub_df <- df %>%
-    filter(!Genus %in% genera)
-  sub_df
-}
-
 #' @examples
 #' subset_data(data, c("Elephantulus", "Orcinus"))
 #'
 #' #' \dontrun{
 #' subset_data("a")
 #' }
+subset_data <- function(df, genera) {
+  sub_df <- df %>%
+    filter(!Genus %in% genera)
+  sub_df
+}
