@@ -15,7 +15,8 @@ Imports:
     dplyr,
     ggplot2,
     here,
-    readxl
+    readxl,
+    stringr
 Suggests: 
     testthat (>= 3.0.0),
     devtools,
