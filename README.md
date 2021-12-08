@@ -32,7 +32,7 @@ The **analysis** directory contains:
 -   [:file\_folder: data](/analysis/data): Data used in the analysis.
 -   [:file\_folder: figures](/analysis/figures): Plots and other
     illustrations.
--   [:file\_folder:templates](/analysis/templates): Templates used to
+-   [:file\_folder: templates](/analysis/templates): Templates used to
     build this research compendium.
 
 ## How to run in your browser or download and run locally
