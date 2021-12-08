@@ -79,18 +79,18 @@ head(data)
 ```
 
 ```{r regressions}
-# linear regression
 
-# function this
-sub_data <- data %>%
-  subset(Genus != "Elephantulus") %>%
-  subset(Genus != "Orcinus")
+# parse the data for R 
+drop_genera <- (c("Elephantulus", "Orcinus"))
+sub_data <- subset_data(data, drop_genera)
 
 # function this
 lm(log10(BMR.W) ~ log10(Mass.g), sub_data)
-
 # function this
 lm(log10(BMR.W) ~ (log10(Mass.g)^2) + log10(Mass.g), sub_data)
+
+# ggplot2 the figure
+
 
 ```
 
