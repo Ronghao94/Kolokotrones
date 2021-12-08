@@ -22,7 +22,7 @@ output:
       - --lua-filter=../templates/author-info-blocks.lua
       - --lua-filter=../templates/pagebreak.lua
 bibliography: references.bib
-csl: "../templates/journal-of-archaeological-science.csl" # Insert path for the bib-style
+csl: "../templates/nature.csl" # Insert path for the bib-style
 abstract: |
   Text of abstract
 keywords: |
@@ -51,13 +51,18 @@ knitr::opts_chunk$set(
   fig.path = "../figures/",
   dpi = 300
 )
+library(readxl)
+library(tidyverse)
+library(Kolokotrones)
+library(dplyr)
+library(ggplot2)
 ```
 
 <!-- The actual document text starts here: -->
 
 # Introduction
 
-Here is a citation [@Marwick2017]
+This is a replication of figure 1a from [@kolokotrones2010] (Fig. \@ref(fig:fig1a)).
 
 # Background
 
@@ -68,12 +73,9 @@ Here is a citation [@Marwick2017]
 <!-- Here's some example analysis code: -->
 
 ```{r get-data}
-library(readxl)
-library(tidyverse)
-
 # Note the path that we need to use to access our data files when rendering this document
 data <- read_excel(here::here("analysis/data/41586_2010_BFnature08920_MOESM90_ESM.xls"), skip = 6)
-names(data) <- str_replace_all(names(data), c(" " = ".", "[(]" = ".", "[)]" = ""))
+names(data) <- str_replace_all(names(data), c(" " = ".", "[(]" = "", "[)]" = ""))
 head(data)
 
 ```
@@ -91,16 +93,18 @@ lm(log10(BMR.W) ~ (log10(Mass.g)^2) + log10(Mass.g), sub_data)
 
 ```
 
-
-
-
 Figure \@ref(fig:demo-plot) shows how we can have a caption and cross-reference for a plot
 
-```{r generate-figure}
-haha
+```{r load}
+
 ```
 
+```{r fig1a, fig.cap="Replication of figure 1a from [@kolokotrones2010]"}
 
+
+
+
+```
 
 # Discussion
 
@@ -112,17 +116,18 @@ haha
 
 \newpage
 
-# References 
+# References
 
 <!-- The following line ensures the references appear here for the MS Word or HTML output files, rather than right at the end of the document (this will not work for PDF files):  -->
 
-<div id="refs"></div>
+::: {#refs}
+:::
 
 \newpage
 
 ### Colophon
 
-This report was generated on `r Sys.time()` using the following computational environment and dependencies: 
+This report was generated on `r Sys.time()` using the following computational environment and dependencies:
 
 ```{r colophon, cache = FALSE}
 # which R packages and versions?
