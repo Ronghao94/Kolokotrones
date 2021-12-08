@@ -79,17 +79,14 @@ head(data)
 ```
 
 ```{r regressions}
+
+# parse the data for R 
+drop_genera <- (c("Elephantulus", "Orcinus"))
+sub_data <- subset_data(data, drop_genera)
+
 # linear regression
-
-# function this
-sub_data <- data %>%
-  subset(Genus != "Elephantulus") %>%
-  subset(Genus != "Orcinus")
-
-# function this
 lm(log10(BMR.W) ~ log10(Mass.g), sub_data)
-
-# function this
+# quadratic regression
 lm(log10(BMR.W) ~ (log10(Mass.g)^2) + log10(Mass.g), sub_data)
 
 ```
@@ -100,8 +97,7 @@ lm(log10(BMR.W) ~ (log10(Mass.g)^2) + log10(Mass.g), sub_data)
 Figure \@ref(fig:demo-plot) shows how we can have a caption and cross-reference for a plot
 
 ```{r generate-figure}
-# ggplot the data
-# function this
+haha
 ```
 
 
