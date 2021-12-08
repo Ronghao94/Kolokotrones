@@ -97,7 +97,7 @@ lm(log10(BMR.W) ~ (log10(Mass.g)^2) + log10(Mass.g), sub_data)
 Figure \@ref(fig:demo-plot) shows how we can have a caption and cross-reference for a plot
 
 ```{r generate-figure}
-hahaha
+haha
 ```
 
 
