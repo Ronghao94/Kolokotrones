@@ -62,11 +62,7 @@ library(ggplot2)
 
 # Introduction
 
-<<<<<<< HEAD
-This is all a conflict
-=======
 This is a replication of figure 1a from [@kolokotrones2010] (Fig. \@ref(fig:fig1a)).
->>>>>>> 527e7a2ed33676a8ca9f021d782b49e6d64dc8a1
 
 # Background
 
@@ -97,15 +93,7 @@ lm(log10(BMR.W) ~ (log10(Mass.g)^2) + log10(Mass.g), sub_data)
 
 Figure \@ref(fig:demo-plot) shows how we can have a caption and cross-reference for a plot
 
-<<<<<<< HEAD
-Figure \@ref(fig:demo-plot) shows how we can have a caption and cross-reference for a plot
-=======
-```{r load}
-
-```
-
 ```{r fig1a, fig.cap="Replication of figure 1a from [@kolokotrones2010]"}
->>>>>>> 527e7a2ed33676a8ca9f021d782b49e6d64dc8a1
 
 
 
