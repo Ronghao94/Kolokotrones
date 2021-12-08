@@ -57,15 +57,13 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-Here is a citation [@Marwick2017]
+This is all a conflict
 
 # Background
 
 # Methods
 
 # Results
-
-<!-- Here's some example analysis code: -->
 
 ```{r get-data}
 library(readxl)
@@ -90,8 +88,6 @@ lm(log10(BMR.W) ~ log10(Mass.g), sub_data)
 lm(log10(BMR.W) ~ (log10(Mass.g)^2) + log10(Mass.g), sub_data)
 
 ```
-
-
 
 
 Figure \@ref(fig:demo-plot) shows how we can have a caption and cross-reference for a plot
