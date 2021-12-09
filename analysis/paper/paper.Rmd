@@ -1,17 +1,20 @@
 ---
-title: "Title Goes Here"
+title: "Replicating Figure 1a in Kolokotrones, 2010"
 author:
-  - Myfirstname Mylastname:
-      email: fl@oneplace.edu
-      institute: [UofO]
+  - Hannah Fung:
+      email: hffung@stanford.edu
+      institute: [Stanford]
       correspondence: true
-  - Yourfirstname Yourlastname:
-      email: fl@another.edu
-      institute: [UofA]
-      correspondence: false
+  - Raeline Corryn Valbuena:
+      email: raecv@stanford.edu
+      institute: [Stanford]
+      correspondence: true
+  - Ronghao Zhou:
+      email: ronghao@stanford.edu
+      institute: [Stanford]
+      correspondence: true
 institute:
-  - UofO: University of One Place
-  - UofA: University of Another Place
+  - Stanford: Stanford University, Biosciences
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
     bookdown::word_document2:
@@ -26,9 +29,9 @@ csl: "../templates/nature.csl" # Insert path for the bib-style
 abstract: |
   Text of abstract
 keywords: |
-  keyword 1; keyword 2; keyword 3
+  body mass, basal metabolic rate, replication
 highlights: |
-  These are the highlights. 
+  Final project for Just Enough Software Engineering. 
 ---
 
 <!-- This is the format for text comments that will be ignored during renderings. Do not put R code in these comments because it will not be ignored. -->
@@ -51,11 +54,6 @@ knitr::opts_chunk$set(
   fig.path = "../figures/",
   dpi = 300
 )
-library(readxl)
-library(tidyverse)
-library(Kolokotrones)
-library(dplyr)
-library(ggplot2)
 ```
 
 <!-- The actual document text starts here: -->
@@ -70,33 +68,87 @@ This is a replication of figure 1a from [@kolokotrones2010] (Fig. \@ref(fig:fig1
 
 # Results
 
-```{r get-data}
-# Note the path that we need to use to access our data files when rendering this document
-data <- read_excel(here::here("analysis/data/41586_2010_BFnature08920_MOESM90_ESM.xls"), skip = 6)
-names(data) <- str_replace_all(names(data), c(" " = ".", "[(]" = "", "[)]" = ""))
-head(data)
+```{r load}
+library(readxl)
+library(tidyverse)
+library(Kolokotrones)
+library(dplyr)
+library(ggplot2)
+```
 
+```{r get-data}
+# Path we need to use to access our data files when rendering this document
+data <- read_excel(here::here("analysis/data/41586_2010_BFnature08920_MOESM90_ESM.xls"), skip = 6)
+# general parsing of data column names and values
+names(data) <- str_replace_all(names(data), c(" " = ".",
+                                              "[(]" = "",
+                                              "[)]" = ""))
+data <- data[!is.na(data$Mass.g),]
+# head(data)
 ```
 
 ```{r regressions}
+# prepare additional columns for regressions
+data <- data %>%
+  mutate(log_Mass <- log10(data$Mass.g),
+         log_Mass2 <- data$log_Mass^2, 
+         log_BMR <- log10(data$BMR.W))
 
-# parse the data for R 
+# parse the data for values of interest 
 drop_genera <- (c("Elephantulus", "Orcinus"))
 sub_data <- subset_data(data, drop_genera)
+drop_data <- anti_join(data, sub_data, by = "Genus")
 
-# linear regression
-lm(log10(BMR.W) ~ log10(Mass.g), sub_data)
-# quadratic regression
-lm(log10(BMR.W) ~ (log10(Mass.g)^2) + log10(Mass.g), sub_data)
+# generate linear regression
+lin_reg <- lm(log_BMR ~ log_Mass, sub_data)
+# generate prediction of linear regression
+pred_data_lin <- tibble(
+  log_Mass = seq(from=0, to=max(data$log_Mass), length.out = 100)
+) %>% 
+  mutate(log_BMR = stats::predict(lin_reg, newdata = .))
 
+# generate quadratic regression
+qua_reg <- lm(log_BMR ~ log_Mass+log_Mass2, sub_data)
+# generate prediction of quadratic regression
+pred_data_qua <- tibble(
+  log_Mass = seq(from=0, to=max(data$log_Mass), length.out = 100),
+  log_Mass2 = log_Mass^2
+) %>% mutate(log_BMR = stats::predict(qua_reg, newdata = .))
+```
+
+
+```{r elephant_orca_data}
+elephant_data <- data %>% filter(Genus.Species == 'Elephantulus myurus')
+orca_data <- data %>% filter(Genus == 'Orcinus')
 ```
 
 Figure \@ref(fig:demo-plot) shows how we can have a caption and cross-reference for a plot
 
 ```{r fig1a, fig.cap="Replication of figure 1a from [@kolokotrones2010]"}
 
-
-
+ggplot(sub_data, aes(x=log_Mass, y=log_BMR)) + 
+  geom_point(size = 0.5) +
+  theme_minimal() +
+  theme(legend.position="left", 
+        axis.line=element_line(colour="black")) +
+  geom_line(data = pred_data_lin,
+            color = 'red',
+            size = 1) +
+  geom_line(data = pred_data_qua, 
+            color = 'blue',
+            size = 1) + 
+  labs(x=expression("log"[10]*"[M (g)]"), 
+     y=expression("log"[10]*"[B (W)]"), 
+     title="Figure 1: Curvature in metabolic scaling.") +
+  scale_color_manual(name="", values=c("Linear"="red","Quadratic"="blue")) +
+  geom_point(data = elephant_data,
+             color = 'turquoise',
+             shape = 15,
+             size = 3) +
+  geom_point(data = orca_data,
+             color = 'sea green',
+             shape = 15,
+             size = 3)
 
 ```
 
