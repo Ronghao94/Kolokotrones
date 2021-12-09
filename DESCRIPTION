@@ -5,8 +5,10 @@ Authors@R:
     person("Hannah", "Fung", email = "hffung@stanford.edu", role = c("aut", "cre"))
     person("Raeline", "Valbuena", email = "raecv@stanford.edu", role = c("aut", "cre"))
     person("Ronghao", "Zhou", email = "ronghao@stanford.edu", role = c("aut", "cre"))
-Description:  In this compendium, we provide the data, code, and other R tools
-to replicate Figure 1a from Nature, Kolokotrones et al. (2010).
+Description: In a landmark paper published in Nature, Kolokotrones et al. (2010)
+    show that the relationship takes on a convex curvature on a logarithmic
+    scale. In this compendium, we provide the data, code, and other R tools
+    to replicate Figure 1a from Nature, Kolokotrones et al. (2010).
 License: MIT + file LICENSE
 ByteCompile: true
 Encoding: UTF-8
