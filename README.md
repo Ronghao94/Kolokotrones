@@ -18,7 +18,7 @@ Please cite this compendium as:
 
 > Fung, Hannah; Valbuena, Raeline; Zhou, Ronghao. (2021). *Compendium of
 > R code and data for `Replicating Figure 1a in Kolokotrones, 2010`*.
-> Accessed 08 Dec 2021. Online at
+> Accessed 09 Dec 2021. Online at
 > <https://github.com/Ronghao94/Kolokotrones>
 
 ## Contents
@@ -90,7 +90,7 @@ data <- read_excel(here::here("analysis/data/41586_2010_BFnature08920_MOESM90_ES
 names(data) <- str_replace_all(names(data), c(" " = ".", "[(]" = "", "[)]" = ""))
 ```
 
-Run `subset_data()` to drop orcas and elephants from the dataset.
+Run `subset_data()` to drop orcas and elephant shrews from the dataset.
 
 ``` r
 drop_genera <- (c("Elephantulus", "Orcinus"))
