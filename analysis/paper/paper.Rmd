@@ -77,103 +77,78 @@ library(ggplot2)
 ```
 
 ```{r get-data}
-# Note the path that we need to use to access our data files when rendering this document
+# Path we need to use to access our data files when rendering this document
 data <- read_excel(here::here("analysis/data/41586_2010_BFnature08920_MOESM90_ESM.xls"), skip = 6)
-names(data) <- str_replace_all(names(data), c(" " = ".", "[(]" = "", "[)]" = ""))
+# general parsing of data column names and values
+names(data) <- str_replace_all(names(data), c(" " = ".",
+                                              "[(]" = "",
+                                              "[)]" = ""))
 data <- data[!is.na(data$Mass.g),]
 # head(data)
-
 ```
 
 ```{r regressions}
+# prepare additional columns for regressions
+data <- data %>%
+  mutate(log_Mass <- log10(data$Mass.g),
+         log_Mass2 <- data$log_Mass^2, 
+         log_BMR <- log10(data$BMR.W))
 
-
-
-# # linear regression
-# lin_reg <- lm(log10(BMR.W) ~ log10(Mass.g), sub_data)
-# 
-# pred_data_lin <- tibble(
-#   Mass.g = seq(from=min(data$Mass.g), to=max(data$Mass.g), length.out = 100)
-# ) %>% 
-#   mutate(BMR.W = 10^(stats::predict(lin_reg, newdata = .)))
-# 
-# # quadratic regression
-# sub_data$Mass2 <- sub_data$Mass.g^2
-# qua_reg <- lm(log10(BMR.W) ~ log10(Mass.g)^2 + log10(Mass.g), sub_data)
-# 
-# pred_data_qua <- tibble(
-#   Mass.g = seq(from=min(data$Mass.g), to=max(data$Mass.g), length.out = 100)
-# ) %>% 
-#   mutate(BMR.W = 10^(stats::predict(qua_reg, newdata = .)))
-
-# linear regression
-data$log_Mass <- log10(data$Mass.g)
-data$log_Mass2 <- data$log_Mass^2
-data$log_BMR <- log10(data$BMR.W)
-
-# parse the data for R 
+# parse the data for values of interest 
 drop_genera <- (c("Elephantulus", "Orcinus"))
 sub_data <- subset_data(data, drop_genera)
 drop_data <- anti_join(data, sub_data, by = "Genus")
 
+# generate linear regression
 lin_reg <- lm(log_BMR ~ log_Mass, sub_data)
-
+# generate prediction of linear regression
 pred_data_lin <- tibble(
   log_Mass = seq(from=0, to=max(data$log_Mass), length.out = 100)
 ) %>% 
   mutate(log_BMR = stats::predict(lin_reg, newdata = .))
 
-# quadratic regression
-
+# generate quadratic regression
 qua_reg <- lm(log_BMR ~ log_Mass+log_Mass2, sub_data)
-
+# generate prediction of quadratic regression
 pred_data_qua <- tibble(
   log_Mass = seq(from=0, to=max(data$log_Mass), length.out = 100),
   log_Mass2 = log_Mass^2
-) %>% 
-  mutate(log_BMR = stats::predict(qua_reg, newdata = .))
+) %>% mutate(log_BMR = stats::predict(qua_reg, newdata = .))
+```
 
-Elephant_data <- data %>% filter(Genus.Species == 'Elephantulus myurus')
-Orca_data <- data %>% filter(Genus == 'Orcinus')
+
+```{r elephant_orca_data}
+elephant_data <- data %>% filter(Genus.Species == 'Elephantulus myurus')
+orca_data <- data %>% filter(Genus == 'Orcinus')
 ```
 
 Figure \@ref(fig:demo-plot) shows how we can have a caption and cross-reference for a plot
 
 ```{r fig1a, fig.cap="Replication of figure 1a from [@kolokotrones2010]"}
 
-# ggplot(sub_data, aes(x=log10(Mass.g), y=log10(BMR.W))) + 
-#   geom_point(size = 0.5) +
-#   theme_minimal() +
-#   theme(legend.position="left") +
-#   # geom_point(drop_data, aes(x=log10(Mass.g), y=log10(BMR.W))) +
-#   geom_line(data = pred_data_lin, # <- change the data
-#             color = 'red',
-#             size = 1.5) +
-#   geom_line(data = pred_data_qua, # <- change the data
-#             color = 'blue',
-#             size = 1) + 
-#   labs(x=expression("log"[10]*"[M (g)]"), 
-#      y=expression("log"[10]*"[B (W)]"), 
-#      title="Figure 1: Curvature in metabolic scaling.") +
-#   scale_color_manual(name="", values=c("Linear"="red","Quadratic"="blue"))
- 
 ggplot(sub_data, aes(x=log_Mass, y=log_BMR)) + 
   geom_point(size = 0.5) +
   theme_minimal() +
   theme(legend.position="left", 
         axis.line=element_line(colour="black")) +
-  geom_line(data = pred_data_lin, # <- change the data
+  geom_line(data = pred_data_lin,
             color = 'red',
-            size = 1.5) +
-  geom_line(data = pred_data_qua, # <- change the data
+            size = 1) +
+  geom_line(data = pred_data_qua, 
             color = 'blue',
             size = 1) + 
   labs(x=expression("log"[10]*"[M (g)]"), 
      y=expression("log"[10]*"[B (W)]"), 
      title="Figure 1: Curvature in metabolic scaling.") +
-  # geom_point(Elephant_data, aes(x=log_Mass, y=log_BMR),shape='square') +
-  scale_color_manual(name="", values=c("Linear"="red","Quadratic"="blue")) 
-
+  scale_color_manual(name="", values=c("Linear"="red","Quadratic"="blue")) +
+  geom_point(data = elephant_data,
+             color = 'turquoise',
+             shape = 15,
+             size = 3) +
+  geom_point(data = orca_data,
+             color = 'sea green',
+             shape = 15,
+             size = 3)
 
 ```
 
