@@ -124,30 +124,40 @@ orca_data <- data %>% filter(Genus == 'Orcinus')
 Figure \@ref(fig:demo-plot) shows how we can have a caption and cross-reference for a plot
 
 ```{r fig1a, fig.cap="Replication of figure 1a from [@kolokotrones2010]"}
-
+# set colors equal to original publication
+colors = c("Linear" = "red",
+           "Quadratic" = "blue",
+           "Elephant (not included in fit)" = "turquoise",
+           "Orca (not included in fit)" = "sea green")
+# generate figure 1a using ggplot2
 ggplot(sub_data, aes(x=log_Mass, y=log_BMR)) + 
   geom_point(size = 0.5) +
-  theme_minimal() +
-  theme(legend.position="left", 
-        axis.line=element_line(colour="black")) +
   geom_line(data = pred_data_lin,
-            color = 'red',
+            aes(color = "Linear"),
             size = 1) +
   geom_line(data = pred_data_qua, 
-            color = 'blue',
+            aes(color = "Quadratic"),
             size = 1) + 
-  labs(x=expression("log"[10]*"[M (g)]"), 
-     y=expression("log"[10]*"[B (W)]"), 
-     title="Figure 1: Curvature in metabolic scaling.") +
-  scale_color_manual(name="", values=c("Linear"="red","Quadratic"="blue")) +
   geom_point(data = elephant_data,
-             color = 'turquoise',
+             aes(color = 'Elephant (not included in fit)'),
              shape = 15,
              size = 2) +
   geom_point(data = orca_data,
-             color = 'sea green',
+             aes(color = 'Orca (not included in fit)'),
              shape = 15,
-             size = 2)
+             size = 2)+
+  theme_minimal() +
+  theme(legend.position=c(0.2, 0.8),
+        legend.title = element_blank(),
+        axis.line=element_line(colour="black"), 
+        legend.background = element_rect(fill="white",
+                                  size=0.5, linetype="solid", 
+                                  color ="black")) +
+  labs(x=expression("log"[10]*"[M (g)]"), 
+     y=expression("log"[10]*"[B (W)]"), 
+     title="Figure 1: Curvature in metabolic scaling.",
+     color = "Legend") +
+  scale_color_manual(values = colors)
 
 ```
 
