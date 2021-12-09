@@ -1,9 +1,12 @@
 Package: Kolokotrones
-Title: What the Package Does (One Line, Title Case)
+Title: Replicate Figure 1a from Kolokotrones et al 2021
 Version: 0.0.0.9000
 Authors@R:
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+    person("Hannah", "Fung", email = "hffung@stanford.edu", role = c("aut", "cre"))
+    person("Raeline", "Valbuena", email = "raecv@stanford.edu", role = c("aut", "cre"))
+    person("Ronghao", "Zhou", email = "ronghao@stanford.edu", role = c("aut", "cre"))
+Description:  In this compendium, we provide the data, code, and other R tools
+to replicate Figure 1a from Nature, Kolokotrones et al. (2010).
 License: MIT + file LICENSE
 ByteCompile: true
 Encoding: UTF-8
