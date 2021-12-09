@@ -78,7 +78,7 @@ library(ggplot2)
 
 ```{r get-data}
 # Path we need to use to access our data files when rendering this document
-data <- read_excel(here::here("analysis/data/41586_2010_BFnature08920_MOESM90_ESM.xls"), skip = 6)
+data <- read_excel(here::here("analysis/data/41586_2010_BFnature08920_MOESM90_ESM_elephant.xls"), skip = 6)
 # general parsing of data column names and values
 names(data) <- str_replace_all(names(data), c(" " = ".",
                                               "[(]" = "",
@@ -90,12 +90,12 @@ data <- data[!is.na(data$Mass.g),]
 ```{r regressions}
 # prepare additional columns for regressions
 data <- data %>%
-  mutate(log_Mass <- log10(data$Mass.g),
-         log_Mass2 <- data$log_Mass^2, 
-         log_BMR <- log10(data$BMR.W))
+  mutate(log_Mass = log10(Mass.g),
+         log_Mass2 = log_Mass^2, 
+         log_BMR = log10(BMR.W))
 
 # parse the data for values of interest 
-drop_genera <- (c("Elephantulus", "Orcinus"))
+drop_genera <- (c("Elephas", "Orcinus"))
 sub_data <- subset_data(data, drop_genera)
 drop_data <- anti_join(data, sub_data, by = "Genus")
 
@@ -104,8 +104,7 @@ lin_reg <- lm(log_BMR ~ log_Mass, sub_data)
 # generate prediction of linear regression
 pred_data_lin <- tibble(
   log_Mass = seq(from=0, to=max(data$log_Mass), length.out = 100)
-) %>% 
-  mutate(log_BMR = stats::predict(lin_reg, newdata = .))
+) %>% mutate(log_BMR = stats::predict(lin_reg, newdata = .))
 
 # generate quadratic regression
 qua_reg <- lm(log_BMR ~ log_Mass+log_Mass2, sub_data)
@@ -118,7 +117,7 @@ pred_data_qua <- tibble(
 
 
 ```{r elephant_orca_data}
-elephant_data <- data %>% filter(Genus.Species == 'Elephantulus myurus')
+elephant_data <- data %>% filter(Genus == 'Elephas')
 orca_data <- data %>% filter(Genus == 'Orcinus')
 ```
 
@@ -144,11 +143,11 @@ ggplot(sub_data, aes(x=log_Mass, y=log_BMR)) +
   geom_point(data = elephant_data,
              color = 'turquoise',
              shape = 15,
-             size = 3) +
+             size = 2) +
   geom_point(data = orca_data,
              color = 'sea green',
              shape = 15,
-             size = 3)
+             size = 2)
 
 ```
 
