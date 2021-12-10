@@ -19,6 +19,7 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
     bookdown::word_document2:
       fig_caption: yes
+      number_sections: no
       reference_docx: "../templates/template.docx" # Insert path for the DOCX file
       pandoc_args:
       - --lua-filter=../templates/scholarly-metadata.lua
@@ -115,13 +116,10 @@ pred_data_qua <- tibble(
 ) %>% mutate(log_BMR = stats::predict(qua_reg, newdata = .))
 ```
 
-
 ```{r elephant_orca_data}
 elephant_data <- data %>% filter(Genus == 'Elephas')
 orca_data <- data %>% filter(Genus == 'Orcinus')
 ```
-
-Figure \@ref(fig:demo-plot) shows how we can have a caption and cross-reference for a plot
 
 ```{r fig1a, fig.cap="Replication of figure 1a from [@kolokotrones2010]"}
 # set colors equal to original publication
@@ -152,12 +150,16 @@ ggplot(sub_data, aes(x=log_Mass, y=log_BMR)) +
         axis.line=element_line(colour="black"), 
         legend.background = element_rect(fill="white",
                                   size=0.5, linetype="solid", 
-                                  color ="black")) +
+                                  color ="black"),
+        axis.ticks=element_line(colour="black")) +
   labs(x=expression("log"[10]*"[M (g)]"), 
      y=expression("log"[10]*"[B (W)]"), 
      title="Figure 1: Curvature in metabolic scaling.",
      color = "Legend") +
-  scale_color_manual(values = colors)
+  scale_x_continuous(expand = c(0, 0)) + scale_y_continuous(expand = c(0, 0)) +
+  scale_color_manual(values = colors, 
+                     guide = guide_legend(override.aes = list(
+                       linetype = c(rep("solid",2),rep("blank", 2)))))
 
 ```
 
